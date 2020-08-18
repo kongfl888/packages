@@ -1,0 +1,46 @@
+# [K] (c) 2020
+
+name: TEST
+
+on:
+  push:
+    branches:
+      - test
+    paths:
+      - '.github/workflows/master.yml'
+
+jobs:
+  create:
+
+    runs-on: ubuntu-latest
+    if: github.repository == 'kongfl888/packages'
+    steps:
+
+    - name: Checkout
+      uses: actions/checkout@main
+      with:
+        ref: test
+
+    - name: Set git identity
+      run : |
+        git config --global user.email "kongfl888@outlook.com"
+        git config --global user.name "kongfl888 K"
+    - name: Git Init
+      run:  |
+        git checkout test
+        cp -rf ./files /tmp
+        git remote add op https://github.com/openwrt/packages.git
+        git fetch op master
+        git branch -f master op/master
+        git checkout master
+        cp -f /tmp/files/Makefile1 utils/coremark/Makefile
+        git add .
+        git commit -s -m "Coremark: bump to ver 2020-05-28"
+        cp -f /tmp/files/Makefile2 utils/coremark/Makefile
+        git add .
+        git commit -s -m "Coremark: update the compilation for 64bit"
+    - name: Push Commits
+      env:
+        DOWNSTREAM_BRANCH: coremark
+      run:  |
+        git push --force origin $DOWNSTREAM_BRANCH
