@@ -31,8 +31,8 @@ jobs:
         cp -rf ./files /tmp
         git remote add op https://github.com/openwrt/packages.git
         git fetch op master
-        git branch -f master op/master
-        git checkout master
+        git branch -f coremark op/master
+        git checkout coremark
         cp -f /tmp/files/Makefile1 utils/coremark/Makefile
         git add .
         git commit -s -m "Coremark: bump to ver 2020-05-28"
